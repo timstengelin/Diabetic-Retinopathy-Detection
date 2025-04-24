@@ -1,35 +1,41 @@
+"""This file sets up all file pathes etc."""
 import os
-import datetime
-
 import gin
 
 
 @gin.configurable
-def gen_run_folder(path_model_id, new_model):
+def gen_run_folder(path_model_id):
+    """Define and create run path.
+
+    Parameters:
+        path_model_id (string): name of model
+
+    Output:
+        run_paths (dict): dictionary with run paths
+    """
     run_paths = dict()
-    path_model_root = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'experiments'))
+    path_model_root = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                   os.pardir, os.pardir,
+                                                   'experiments'))
 
-    date_creation = datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%S-%f')
-    # no model name -> Just use datetime
-    if path_model_id == '':
-        run_id = 'run_' + date_creation
-        run_paths['path_model_id'] = os.path.join(path_model_root, run_id)
-    # process further with given model name
-    else:
-        if new_model and os.path.isdir(os.path.join(path_model_root, path_model_id)):
-            path_model_id = path_model_id + "_" + date_creation
-        run_paths['path_model_id'] = os.path.join(path_model_root, path_model_id)
+    run_paths['path_model_id'] = os.path.join(path_model_root, path_model_id)
 
-
-
-    run_paths['path_logs_train'] = os.path.join(run_paths['path_model_id'], 'logs', 'run.log')
-    run_paths['path_logs_eval'] = os.path.join(run_paths['path_model_id'], 'logs', 'eval', 'run.log')
-    run_paths['path_logs_tune'] = os.path.join(run_paths['path_model_id'], 'logs', 'tune', 'run.log')
-    run_paths['path_board_train'] = os.path.join(run_paths['path_model_id'], 'summary', 'train')
-    run_paths['path_board_val'] = os.path.join(run_paths['path_model_id'], 'summary', 'val')
-    run_paths['path_ckpts_train'] = os.path.join(run_paths['path_model_id'], 'ckpts')
-    run_paths['path_ckpts_eval'] = os.path.join(run_paths['path_model_id'], 'ckpts', 'eval')
-    run_paths['path_gin'] = os.path.join(run_paths['path_model_id'], 'config_operative.gin')
+    run_paths['path_logs_train'] = os.path.join(run_paths['path_model_id'],
+                                                'logs', 'run.log')
+    run_paths['path_logs_eval'] = os.path.join(run_paths['path_model_id'],
+                                               'logs', 'eval', 'run.log')
+    run_paths['path_logs_tune'] = os.path.join(run_paths['path_model_id'],
+                                               'logs', 'tune', 'run.log')
+    run_paths['path_board_train'] = os.path.join(run_paths['path_model_id'],
+                                                 'summary', 'train')
+    run_paths['path_board_val'] = os.path.join(run_paths['path_model_id'],
+                                               'summary', 'val')
+    run_paths['path_ckpts_train'] = os.path.join(run_paths['path_model_id'],
+                                                 'ckpts')
+    run_paths['path_ckpts_eval'] = os.path.join(run_paths['path_model_id'],
+                                                'ckpts', 'eval')
+    run_paths['path_gin'] = os.path.join(run_paths['path_model_id'],
+                                         'config_operative.gin')
 
     # Create folders
     for k, v in run_paths.items():
@@ -49,5 +55,11 @@ def gen_run_folder(path_model_id, new_model):
 
 
 def save_config(path_gin, config):
+    """Save config path.
+
+    Parameters:
+        path_gin (string): path for gin config
+        config (string): actual gin config path
+    """
     with open(path_gin, 'w') as f_config:
         f_config.write(config)

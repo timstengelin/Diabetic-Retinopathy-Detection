@@ -9,4 +9,4 @@
 # Activate everything you need
 module load cuda/11.8
 # Run your python code
-python main.py
+python main.py --tune

@@ -1,9 +1,10 @@
+"""This file is for setting loggers."""
 import logging
 import tensorflow as tf
 
 
 def set_loggers(path_log=None, logging_level=0, b_stream=False, b_debug=False):
-
+    """Set loggers."""
     # std. logger
     logger = logging.getLogger()
     logger.setLevel(logging_level)

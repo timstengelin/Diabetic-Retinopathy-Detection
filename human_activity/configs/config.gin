@@ -1,56 +1,73 @@
-# Architectures and layers
-lstm_architecture.dropout_rate = 0.15
+# ---------- ARCHITECTURE PARAMETERS FOR TRAIN, EVALUATE ----------
+
+# LSTM ARCHITECTURE
+lstm_architecture.dropout_rate = 0.5
 lstm_architecture.units = 64
+
+# GRU ARCHITECTURE
 gru_architecture.dropout_rate = 0.15
 gru_architecture.units = 64
+
+# RNN ARCHITECTURE
 rnn_architecture.dropout_rate = 0.15
 rnn_architecture.units = 64
+
+# BIDIRECTIONAL LSTM ARCHITECTURE
 bidi_lstm_architecture.dropout_rate = 0.5
 bidi_lstm_architecture.units = 128
+
+# CONVOLUTIONAL LSTM ARCHITECTURE
 conv1d_architecture.dropout_rate = 0.50
 conv1d_architecture.filters = 32
 conv1d_architecture.units = 64
 
+# LSTM ARCHITECTURE WITH VARIABLE LAYER COUNT
 variable_lstm_architecture.dropout_rate = 0.30
 variable_lstm_architecture.units = 32
 variable_lstm_architecture.n_layers = 3
 
+# ---------- LOCAL TRAINING PARAMETERS ----------
 
-# Training
-Trainer.total_steps = 1e3
+Trainer.total_steps = 1e4
 Trainer.log_interval = 1e1
-Trainer.ckpt_interval = 1e2
-Trainer.learning_rate = 1e-4
-Trainer.class_weight = [1., 1.06206897, 1.15789474, 1.01986755, 0.91666667, 0.93902439, 11.84615385, 15.4, 9.625,11., 7.7, 11.]
+Trainer.ckpt_interval = 1e1
+Trainer.learning_rate = 1e-3
 
-training.model_name = "LSTM_model"
+# ---------- CLASS BALANCING ----------
 
-# Evaluation
-evaluation.model_name = "LSTM_model"
+Trainer.class_weight = [1., 1.06206897, 1.15789474, 1.01986755, 0.91666667, 0.93902439, 11.84615385,
+                        15.4, 9.625,11., 7.7, 11.]
 
-# Folder/Path generation
-gen_run_folder.path_model_id = 'GRU_model'
-gen_run_folder.new_model = True
+# ---------- INPUT PIPELINE PARAMETERS ----------
 
-# Input pipeline
 load.name = 'hapt'
 load.data_dir =  '/home/data' # For execution on ISS Server
-#load.data_dir = 'C:/TS/Bildung/EIM/Semester_3/Deep_Learning_Lab/04_Datasets/HAPT_dataset' # For local execution on Tim's computer
 load.tfrecord_files_exist = False # If false, TFRecord file are created for selected window size and window shift
 load.window_size = 250
 load.window_shift = 125
 load.batch_size = 64
 create_tfrecord_files.balance = False
 
-# Visualization
+# ---------- VISUALIZATION PARAMETERS ----------
+
 visualization.range_time = [1000,20000]
 
-# Tuning
-tune.key = '8478ddb0f2c0978283abcb1e18db08bebd904d3f'
+# ---------- PARAMETERS FOR MODE TUNE ----------
 
-train_tune.tune = True
-train_tune.evaluate = False
+# WANDB KEY (add your personal key here)
+tune.key = ''
 
+# WANDB SWEEP CONFIGURATION
+tune.n_runs = 100
+tune.sweep_config = {
+        'method': 'random',
+        'metric': {
+            'name': 'acc_val',
+            'goal': 'maximize'
+        }
+    }
+
+# HYPERPARAMETERS
 tune.parameters_dict = {
         'steps': {
             'values': [1000, 2000, 3000, 4000, 5000, 10000]
